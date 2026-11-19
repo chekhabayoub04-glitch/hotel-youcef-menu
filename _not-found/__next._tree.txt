@@ -1,4 +1,4 @@
 :HL["/hotel-youcef-menu/_next/static/chunks/2qyldsdyvwili.css","style"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"/_not-found","h":96,"c":"$Q2"}]]
-0:{"b":"WFF5VI79SjU0w3pPD7A0d","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"ztRBpwF77scG5OF8NYyGk","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
