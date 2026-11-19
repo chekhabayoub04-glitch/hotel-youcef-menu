@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root,
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --surface: #121212;
+  --surface-2: #1a1918;
+  --line: rgba(201, 162, 74, 0.18);
+  --text: #f3eee4;
+  --muted: #a39d92;
+  --gold: #c9a24a;
+  --gold-soft: #e2c47c;
+  --gold-ink: #0a0a0a;
+  --shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.8);
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #f8f4ec;
+  --surface: #ffffff;
+  --surface-2: #f1ebdf;
+  --line: rgba(150, 112, 38, 0.22);
+  --text: #1a1712;
+  --muted: #6e665a;
+  --gold: #a57f2c;
+  --gold-soft: #8a6a22;
+  --gold-ink: #ffffff;
+  --shadow: 0 20px 45px -25px rgba(80, 60, 20, 0.35);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-ink: var(--gold-ink);
+  --font-serif: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-body), system-ui, sans-serif;
+  --font-arabic: var(--font-ar), var(--font-body), sans-serif;
+  --shadow-card: var(--shadow);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--gold-ink);
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.text-gold-gradient {
+  background: linear-gradient(180deg, #f3dc9a 0%, #c9a24a 55%, #9a7428 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-fade-up { animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes hero-zoom {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+.animate-hero { animation: hero-zoom 2.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .animate-fade-up, .animate-hero { animation: none; }
+}
+
+/* Horizontal rail aligned with the 72rem content column */
+.rail-pad {
+  padding-inline: max(1rem, calc((100vw - 72rem) / 2 + 1.5rem));
+  scroll-padding-inline: max(1rem, calc((100vw - 72rem) / 2 + 1.5rem));
+}
+
+/* Arabic: Tajawal for text, Amiri for display; no letter-spacing (it breaks letter joining). */
+:lang(ar) { font-family: var(--font-ar), system-ui, sans-serif; letter-spacing: 0 !important; }
+:lang(ar) * { letter-spacing: 0 !important; }
+:lang(ar) .font-serif { font-family: var(--font-ar-display), serif; }
