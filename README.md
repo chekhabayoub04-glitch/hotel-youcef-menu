@@ -1,63 +1,67 @@
-# Hôtel Youcef — Restaurant Menu (demo)
+# Hôtel Youcef — Restaurant Menu
 
-A preview of the digital restaurant menu for **Hôtel Youcef, Khenchela**. It runs on its own temporary URL so the client can review it before it is connected to the hotel's main domain.
+The digital restaurant menu of **Hôtel Youcef, Khenchela**. Guests open it by scanning a QR code on the table.
 
-- Public menu (`/`): hero, popular dishes, the full menu by category, gallery, contact and social links. Built mobile-first for QR-code access, with dark mode by default and a light mode toggle.
-- Languages: French by default, with an Arabic version (right-to-left) one tap away. The choice is remembered in a cookie. Interface text is in `lib/i18n.ts`. Each dish and category has optional `nameAr` / `descriptionAr` fields, which are also editable in the admin.
-- Admin (`/admin`): password-protected. Add, edit and delete dishes, upload photos, mark dishes sold out ("Épuisé") and choose which ones appear under "Les plus demandés". Changes show up on the public menu right away.
+- **Public menu** (`/`): hero, popular dishes, the full menu by category, gallery, contact and social links. French by default, with an Arabic (right-to-left) version one tap away. Dark mode by default, light mode available.
+- **Admin** (`/admin`): the manager adds, edits and deletes dishes, uploads photos, marks dishes sold out ("Épuisé") and picks the dishes shown under "Les plus demandés". Each change goes live about one minute after saving.
 
-## Stack
+Hosting is **free on GitHub Pages**. There is no server, database or subscription.
 
-Next.js 16 (App Router), TypeScript and Tailwind CSS v4. There is no database and no external service at this stage.
+## How it works
 
-## Run locally
+- The site is a static Next.js 16 export, built with TypeScript and Tailwind CSS v4.
+- It is served from the `gh-pages` branch of this repository.
+- The live menu is the file `menu.json` at the root of `gh-pages`. The public page loads it on every visit, so admin edits show up without a rebuild.
+- `/admin` writes to `menu.json` (and to `uploads/` for photos) directly through the GitHub API. GitHub Pages then republishes the branch automatically.
+- `public/menu.json` on `main` is the copy used at build time. `npm run deploy` first syncs it from the live version, so a deploy never erases what the hotel edited.
+
+## Admin access code
+
+The admin logs in with a GitHub **fine-grained personal access token**, which works as its password. To create one:
+
+1. Go to GitHub → *Settings* → *Developer settings* → *Personal access tokens* → **Fine-grained tokens** → *Generate new token*.
+2. Fill in the token settings:
+   - **Repository access**: *Only select repositories* → `hotel-youcef-menu`.
+   - **Permissions** → *Repository permissions* → **Contents: Read and write**. Leave everything else as it is.
+   - **Expiration**: up to one year. Note the date, because you must give the hotel a new code before it expires.
+3. Give the token to the manager. They paste it once on `/admin` and the device remembers it.
+
+This token can only change files in this one repository. To revoke access, delete the token on GitHub.
+
+## Develop and deploy
 
 ```bash
 npm install
-cp .env.example .env.local   # then edit the values
-npm run dev                  # http://localhost:3000  ·  admin: /admin
+npm run dev        # http://localhost:3000   (the admin edits the live menu too)
+npm run deploy     # build + publish to gh-pages → live in ~1 minute
 ```
 
-| Variable | Purpose | Demo default |
-|---|---|---|
-| `ADMIN_PASSWORD` | Shared admin password | `youcef2026` |
-| `ADMIN_SECRET` | Signs the admin session cookie | built-in demo value |
-| `NEXT_PUBLIC_WHATSAPP` | WhatsApp number for the order buttons, digits only (e.g. `213XXXXXXXXX`) | `213000000000` (placeholder) |
+Code changes need `npm run deploy`. Menu changes made from `/admin` do not.
 
-Change `ADMIN_PASSWORD` and `ADMIN_SECRET` before sharing the link.
+To reset the menu to the original printed menu, copy `data/menu.seed.json` over `public/menu.json` and run `npm run deploy`.
 
-## Deploy a preview on Vercel
+## Configuration
 
-```bash
-npx vercel          # creates a preview URL
-```
+`lib/site.ts`:
+- phone number
+- WhatsApp number: also settable with the `NEXT_PUBLIC_WHATSAPP` environment variable at build time
+- social links
 
-Or push the folder to GitHub and import it in Vercel. Set the three environment variables in *Project → Settings → Environment Variables*.
+`lib/github.ts`: the repository and branch the admin writes to.
 
-> **Demo limitation:** Vercel's file system is read-only and temporary. On Vercel, admin edits are written to `/tmp`. They can disappear after a redeploy or a period of inactivity, and they may not be visible on every server instance. The admin page shows a banner about this. That is acceptable for a client preview. The production version fixes it by using Google Sheets (see below). Locally, edits are saved permanently to `data/menu.json`.
+`NEXT_PUBLIC_BASE_PATH`: defaults to `/hotel-youcef-menu`. Set it to an empty string when using a custom domain.
 
-## Data layer
+## Custom domain (free)
 
-The UI only depends on the `MenuRepository` interface:
+To serve the menu at `menu.<hotel-domain>`:
 
-```
-lib/data/repository.ts        interface: getMenu / saveDish / deleteDish
-lib/data/json-repository.ts   demo implementation (JSON file)
-lib/data/index.ts             picks the implementation  ← the only line to change
-data/menu.seed.json           original menu (initial data, also used to reset)
-data/menu.json                live data when running locally
-```
+1. Add a **CNAME** DNS record pointing `menu` to `chekhabayoub04-glitch.github.io`.
+2. Set the custom domain under *Repository Settings → Pages*.
+3. Deploy with `NEXT_PUBLIC_BASE_PATH= npm run deploy`.
 
-To reset the demo data: `cp data/menu.seed.json data/menu.json`.
+## Still to confirm with the client
 
-Dish photos are resized in the browser to about 900 px JPEG and stored as data URLs. That way an upload works with any storage backend and needs no separate file host.
-
-## Production roadmap
-
-1. **Google Sheets as the live data source.** Add `GoogleSheetsMenuRepository` that implements `MenuRepository`, with one sheet tab for categories and one for dishes, accessed through a Google service account. Register it in `lib/data/index.ts`. Upload photos to Google Drive or a storage bucket and keep only their URLs in the sheet.
-2. **Custom domain.** Point a subdomain such as `menu.<hotel-domain>` to the Vercel project, then generate the QR codes from the final URL.
-3. **Content to confirm with the client:**
-   - the full WhatsApp number (the printed menu shows "0661 8888…", cut off); the phone number 032 73 15 40 is already in place
-   - the full street address
-   - photos of the dining room, the tables and the pool loungers, plus dish photos, to replace the remaining Unsplash placeholders. The hotel's own photos live in `public/photos/`.
-   - the exact YouTube channel URL
+- the full WhatsApp number (the printed menu shows "0661 8888…", cut off)
+- the full street address
+- photos of the dining room, the tables and the pool loungers, plus dish photos, to replace the remaining Unsplash placeholders (the hotel's own photos are in `public/photos/`)
+- the exact YouTube channel URL

@@ -1,8 +1,7 @@
 import type { Category, Dish } from "./types";
 
 export type Lang = "fr" | "ar";
-export const LANG_COOKIE = "hy-lang";
-export const parseLang = (v?: string): Lang => (v === "ar" ? "ar" : "fr");
+export const LANG_KEY = "hy-lang";
 
 export const dict = {
   fr: {

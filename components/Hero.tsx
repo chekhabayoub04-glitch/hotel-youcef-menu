@@ -1,4 +1,5 @@
 "use client";
+import { asset } from "@/lib/asset";
 import { whatsappLink } from "@/lib/site";
 import { ArrowIcon, WhatsappIcon } from "./Icons";
 import { useLang } from "./LangProvider";
@@ -16,7 +17,7 @@ export function Hero() {
 
       <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-28 text-center sm:px-6 sm:pb-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-hero.png" alt="Hôtel Youcef" className="animate-fade-up mx-auto w-40 drop-shadow-[0_0_30px_rgba(201,162,74,0.25)] sm:w-52" />
+        <img src={asset("logo-hero.png")} alt="Hôtel Youcef" className="animate-fade-up mx-auto w-40 drop-shadow-[0_0_30px_rgba(201,162,74,0.25)] sm:w-52" />
 
         <p className="animate-fade-up mt-2 text-xs uppercase tracking-[0.45em] text-[#e2c47c] [animation-delay:150ms] [:lang(ar)_&]:text-sm">
           {t.heroEyebrow}

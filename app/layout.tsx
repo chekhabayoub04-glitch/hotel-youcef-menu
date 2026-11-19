@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { cookies } from "next/headers";
 import { Amiri, Cormorant_Garamond, Manrope, Tajawal } from "next/font/google";
-import { LANG_COOKIE, parseLang } from "@/lib/i18n";
+import { BASE_PATH } from "@/lib/asset";
+import { LANG_KEY } from "@/lib/i18n";
 import "./globals.css";
 
 const display = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-display" });
@@ -12,7 +12,7 @@ const arabicDisplay = Amiri({ subsets: ["arabic"], weight: ["400", "700"], varia
 export const metadata: Metadata = {
   title: "Hôtel Youcef · Restaurant & Menu",
   description: "Le menu du restaurant de l'Hôtel Youcef, Khenchela — crêpes, pizzas, tacos, sandwichs, pâtisseries orientales, desserts et boissons.",
-  icons: { icon: "/logo.png" },
+  icons: { icon: `${BASE_PATH}/logo.png` },
 };
 
 export const viewport: Viewport = {
@@ -22,14 +22,14 @@ export const viewport: Viewport = {
 };
 
 // Applies the saved theme before first paint (dark by default).
-const themeScript = `try{var t=localStorage.getItem('hy-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}`;
+// Applies saved theme and language before first paint.
+const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('hy-theme');d.dataset.theme=t==='light'?'light':'dark';if(!/\\/admin\\/?$/.test(location.pathname)&&localStorage.getItem('${LANG_KEY}')==='ar'){d.lang='ar';d.dir='rtl'}}catch(e){d.dataset.theme='dark'}})()`;
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const lang = parseLang((await cookies()).get(LANG_COOKIE)?.value);
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang={lang}
-      dir={lang === "ar" ? "rtl" : "ltr"}
+      lang="fr"
+      dir="ltr"
       data-theme="dark"
       suppressHydrationWarning
       className={`${display.variable} ${body.variable} ${arabic.variable} ${arabicDisplay.variable}`}

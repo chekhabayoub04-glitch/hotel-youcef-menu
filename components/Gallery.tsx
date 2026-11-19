@@ -1,4 +1,5 @@
 "use client";
+import { asset } from "@/lib/asset";
 import { useLang } from "./LangProvider";
 import { Reveal } from "./Reveal";
 import { SectionTitle } from "./SectionTitle";
@@ -33,7 +34,7 @@ export function Gallery() {
             return (
               <Reveal key={p.src} delay={(i % 4) * 70} className={`group relative overflow-hidden rounded-2xl border border-line ${p.span}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.src} alt={label} loading="lazy" className="size-full object-cover transition duration-700 group-hover:scale-105" />
+                <img src={asset(p.src)} alt={label} loading="lazy" className="size-full object-cover transition duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/0 to-transparent opacity-90 transition duration-500 sm:opacity-0 sm:group-hover:opacity-100" />
                 <span className="absolute bottom-3 start-4 font-serif text-base text-[#f3eee4] transition duration-500 sm:translate-y-2 sm:text-lg sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
                   {label}

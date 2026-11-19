@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { asset } from "@/lib/asset";
 import { Monogram } from "./Monogram";
 
 export function DishImage({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
@@ -12,5 +13,5 @@ export function DishImage({ src, alt, className = "" }: { src: string; alt: stri
     );
   }
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={alt} loading="lazy" decoding="async" onError={() => setFailed(true)} className={`object-cover ${className}`} />;
+  return <img src={asset(src)} alt={alt} loading="lazy" decoding="async" onError={() => setFailed(true)} className={`object-cover ${className}`} />;
 }

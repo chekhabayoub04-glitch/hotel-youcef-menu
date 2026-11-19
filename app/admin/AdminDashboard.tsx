@@ -1,13 +1,22 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import { DishImage } from "@/components/DishImage";
 import { Monogram } from "@/components/Monogram";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BASE_PATH } from "@/lib/asset";
+import type { Result } from "@/lib/menu-ops";
 import { formatDA } from "@/lib/site";
 import type { Category, Dish, DishInput, Menu } from "@/lib/types";
-import { deleteDish, logout, saveDish, toggleDish } from "./actions";
+
+export type AdminActions = {
+  save: (input: DishInput) => Promise<Result>;
+  remove: (id: string) => Promise<Result>;
+  toggle: (id: string, field: "available" | "featured") => Promise<Result>;
+  logout: () => void;
+  /** Maps a freshly uploaded image path to its local preview while GitHub Pages republishes. */
+  preview: (src: string) => string;
+};
 
 const emptyDish = (categoryId: string): DishInput => ({
   name: "",
@@ -21,9 +30,8 @@ const emptyDish = (categoryId: string): DishInput => ({
   featured: false,
 });
 
-export function AdminDashboard({ menu, ephemeral }: { menu: Menu; ephemeral: boolean }) {
+export function AdminDashboard({ menu, actions }: { menu: Menu; actions: AdminActions }) {
   const { categories, dishes } = menu;
-  const router = useRouter();
   const [filter, setFilter] = useState<string>("all");
   const [query, setQuery] = useState("");
   const [editing, setEditing] = useState<DishInput | null>(null);
@@ -46,11 +54,10 @@ export function AdminDashboard({ menu, ephemeral }: { menu: Menu; ephemeral: boo
     featured: dishes.filter((d) => d.featured).length,
   };
 
-  const run = (fn: () => Promise<{ ok: boolean; error?: string }>, success: string) =>
+  const run = (fn: () => Promise<Result>, success: string) =>
     start(async () => {
       const res = await fn();
-      setToast(res.ok ? success : (res.error ?? "Erreur"));
-      router.refresh();
+      setToast(res.ok ? success : res.error);
     });
 
   return (
@@ -65,24 +72,22 @@ export function AdminDashboard({ menu, ephemeral }: { menu: Menu; ephemeral: boo
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <a href="/" target="_blank" className="hidden rounded-full border border-line px-4 py-2 text-sm text-muted transition hover:border-gold hover:text-gold sm:block">
+            <a href={`${BASE_PATH}/`} target="_blank" className="hidden rounded-full border border-line px-4 py-2 text-sm text-muted transition hover:border-gold hover:text-gold sm:block">
               Voir le menu ↗
             </a>
             <ThemeToggle />
-            <form action={logout}>
-              <button className="rounded-full px-3 py-2 text-sm text-muted transition hover:text-gold">Quitter</button>
-            </form>
+            <button onClick={actions.logout} className="rounded-full px-3 py-2 text-sm text-muted transition hover:text-gold">
+              Quitter
+            </button>
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-        {ephemeral && (
-          <p className="mb-6 rounded-2xl border border-gold/30 bg-gold/5 px-4 py-3 text-sm text-muted">
-            <span className="font-semibold text-gold">Version de démonstration :</span> les modifications sont temporaires sur cet
-            hébergement et peuvent être réinitialisées. La version finale sera reliée à Google Sheets.
-          </p>
-        )}
+        <p className="mb-6 rounded-2xl border border-gold/30 bg-gold/5 px-4 py-3 text-sm text-muted">
+          <span className="font-semibold text-gold">Bon à savoir :</span> chaque modification est enregistrée immédiatement et
+          apparaît sur le menu public environ 1 minute plus tard.
+        </p>
 
         <div className="grid grid-cols-3 gap-3 sm:gap-4">
           {[
@@ -130,7 +135,7 @@ export function AdminDashboard({ menu, ephemeral }: { menu: Menu; ephemeral: boo
           {visible.map((d) => (
             <li key={d.id} className="animate-fade-up flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 sm:gap-4">
               <div className="size-14 shrink-0 overflow-hidden rounded-xl sm:size-16">
-                <DishImage src={d.image} alt={d.name} className={`size-full ${d.available ? "" : "grayscale"}`} />
+                <DishImage src={actions.preview(d.image)} alt={d.name} className={`size-full ${d.available ? "" : "grayscale"}`} />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate font-serif text-lg text-text">
@@ -150,12 +155,12 @@ export function AdminDashboard({ menu, ephemeral }: { menu: Menu; ephemeral: boo
                 <Switch
                   label="Disponible"
                   checked={d.available}
-                  onChange={() => run(() => toggleDish(d.id, "available"), d.available ? `${d.name} : épuisé` : `${d.name} : disponible`)}
+                  onChange={() => run(() => actions.toggle(d.id, "available"), d.available ? `${d.name} : épuisé` : `${d.name} : disponible`)}
                 />
                 <button
                   title={d.featured ? "Retirer des populaires" : "Mettre en vedette"}
                   aria-label="Mettre en vedette"
-                  onClick={() => run(() => toggleDish(d.id, "featured"), "Plats populaires mis à jour")}
+                  onClick={() => run(() => actions.toggle(d.id, "featured"), "Plats populaires mis à jour")}
                   className={`hidden size-9 place-items-center rounded-full text-lg transition sm:grid ${d.featured ? "text-gold" : "text-muted/50 hover:text-gold"}`}
                 >
                   ★
@@ -178,11 +183,11 @@ export function AdminDashboard({ menu, ephemeral }: { menu: Menu; ephemeral: boo
           key={editing.id ?? "new"}
           initial={editing}
           categories={categories}
+          actions={actions}
           onClose={() => setEditing(null)}
           onSaved={(msg) => {
             setEditing(null);
             setToast(msg);
-            router.refresh();
           }}
         />
       )}
@@ -226,11 +231,13 @@ async function resizeImage(file: File, max = 900): Promise<string> {
 function DishForm({
   initial,
   categories,
+  actions,
   onClose,
   onSaved,
 }: {
   initial: DishInput;
   categories: Category[];
+  actions: AdminActions;
   onClose: () => void;
   onSaved: (msg: string) => void;
 }) {
@@ -258,15 +265,15 @@ function DishForm({
     e.preventDefault();
     setError(null);
     start(async () => {
-      const res = await saveDish(dish);
-      if (res.ok) onSaved(isNew ? `${dish.name} ajouté au menu` : `${dish.name} mis à jour`);
+      const res = await actions.save(dish);
+      if (res.ok) onSaved(isNew ? `${dish.name} ajouté — en ligne dans ~1 min` : `${dish.name} mis à jour — en ligne dans ~1 min`);
       else setError(res.error);
     });
   };
 
   const remove = () =>
     start(async () => {
-      const res = await deleteDish(initial.id!);
+      const res = await actions.remove(initial.id!);
       if (res.ok) onSaved(`${initial.name} supprimé`);
       else setError(res.error);
     });
@@ -303,7 +310,7 @@ function DishForm({
 
         <div className="mt-6 flex items-center gap-4">
           <label className="group relative size-24 shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-dashed border-gold/40">
-            <DishImage src={dish.image} alt="" className="size-full" />
+            <DishImage src={actions.preview(dish.image ?? "")} alt="" className="size-full" />
             <span className="absolute inset-0 grid place-items-center bg-black/55 text-xs font-semibold text-[#f3eee4] opacity-0 transition group-hover:opacity-100">
               Changer
             </span>

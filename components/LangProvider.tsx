@@ -1,17 +1,25 @@
 "use client";
-import { createContext, useContext, useState } from "react";
-import { LANG_COOKIE, dict, type Dict, type Lang } from "@/lib/i18n";
+import { createContext, useContext, useEffect, useState } from "react";
+import { LANG_KEY, dict, type Dict, type Lang } from "@/lib/i18n";
 
 const Ctx = createContext<{ lang: Lang; t: Dict; toggle: () => void }>({ lang: "fr", t: dict.fr, toggle: () => {} });
 
-export function LangProvider({ initial, children }: { initial: Lang; children: React.ReactNode }) {
-  const [lang, setLang] = useState<Lang>(initial);
+const apply = (lang: Lang) => {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+};
+
+export function LangProvider({ children }: { children: React.ReactNode }) {
+  const [lang, setLang] = useState<Lang>("fr");
+  useEffect(() => {
+    // The inline script in layout already set <html lang/dir>; sync React state with it.
+    if (document.documentElement.lang === "ar") setLang("ar");
+  }, []);
   const toggle = () => {
     const next: Lang = lang === "fr" ? "ar" : "fr";
     setLang(next);
-    document.cookie = `${LANG_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
-    document.documentElement.lang = next;
-    document.documentElement.dir = next === "ar" ? "rtl" : "ltr";
+    apply(next);
+    try { localStorage.setItem(LANG_KEY, next); } catch {}
   };
   return <Ctx.Provider value={{ lang, t: dict[lang], toggle }}>{children}</Ctx.Provider>;
 }
