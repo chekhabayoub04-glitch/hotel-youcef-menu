@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 
 // Applies the saved theme before first paint (dark by default).
 // Applies saved theme and language before first paint.
-const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('hy-theme');d.dataset.theme=t==='light'?'light':'dark';if(!/\\/admin\\/?$/.test(location.pathname)&&localStorage.getItem('${LANG_KEY}')==='ar'){d.lang='ar';d.dir='rtl'}}catch(e){d.dataset.theme='dark'}})()`;
+const themeScript = `(function(){var d=document.documentElement;try{if('scrollRestoration' in history)history.scrollRestoration='manual';if(location.hash)history.replaceState(null,'',location.pathname+location.search);}catch(e){}try{var t=localStorage.getItem('hy-theme');d.dataset.theme=t==='light'?'light':'dark';if(!/\\/admin\\/?$/.test(location.pathname)&&localStorage.getItem('${LANG_KEY}')==='ar'){d.lang='ar';d.dir='rtl'}}catch(e){d.dataset.theme='dark'}})()`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
