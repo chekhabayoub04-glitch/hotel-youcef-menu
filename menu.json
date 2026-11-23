@@ -631,6 +631,20 @@
       "image": "https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=800&q=75&auto=format&fit=crop",
       "available": true,
       "featured": false
+    },
+    {
+      "id": "crepes-crepe-kinder-bueno",
+      "name": "CREPE KINDER BUENO",
+      "nameAr": "CREPE KINDER BUENO",
+      "categoryId": "crepes",
+      "description": "",
+      "descriptionAr": "",
+      "prices": [
+        800
+      ],
+      "image": "uploads/crepe-kinder-bueno-mwtg3wpo.jpg",
+      "available": true,
+      "featured": false
     }
   ]
 }
