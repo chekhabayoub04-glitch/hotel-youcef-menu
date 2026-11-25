@@ -152,7 +152,9 @@
       ],
       "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=75&auto=format&fit=crop",
       "available": true,
-      "featured": false
+      "featured": false,
+      "model3dUrl": "models/pizza-marguerite.glb",
+      "modelIosUrl": "models/pizza-marguerite.usdz"
     },
     {
       "id": "pizza-cecilienne",
@@ -280,7 +282,9 @@
       ],
       "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=75&auto=format&fit=crop",
       "available": true,
-      "featured": true
+      "featured": true,
+      "model3dUrl": "models/pizza-royale.glb",
+      "modelIosUrl": "models/pizza-royale.usdz"
     },
     {
       "id": "tacos-tacos-viande-hachee",
@@ -294,7 +298,9 @@
       ],
       "image": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=800&q=75&auto=format&fit=crop",
       "available": true,
-      "featured": false
+      "featured": false,
+      "model3dUrl": "models/tacos.glb",
+      "modelIosUrl": "models/tacos.usdz"
     },
     {
       "id": "tacos-tacos-poulet",
@@ -378,7 +384,9 @@
       ],
       "image": "https://images.unsplash.com/photo-1567234669003-dce7a7a88821?w=800&q=75&auto=format&fit=crop",
       "available": true,
-      "featured": false
+      "featured": false,
+      "model3dUrl": "models/club-sandwich.glb",
+      "modelIosUrl": "models/club-sandwich.usdz"
     },
     {
       "id": "sandwichs-chapata-poulet-viande",
@@ -462,7 +470,9 @@
       ],
       "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=800&q=75&auto=format&fit=crop",
       "available": true,
-      "featured": true
+      "featured": true,
+      "model3dUrl": "models/fondant-chocolat.glb",
+      "modelIosUrl": "models/fondant-chocolat.usdz"
     },
     {
       "id": "desserts-nougat-glace",
@@ -546,7 +556,9 @@
       ],
       "image": "/photos/milkshakes-piscine.jpg",
       "available": true,
-      "featured": true
+      "featured": true,
+      "model3dUrl": "models/milkshake.glb",
+      "modelIosUrl": "models/milkshake.usdz"
     },
     {
       "id": "jus-mojito-citron-au-menthe",

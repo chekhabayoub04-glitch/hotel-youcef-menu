@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   basePath,
   trailingSlash: true,
   images: { unoptimized: true },
+  // Dev only: let phones on the same Wi-Fi load the dev server (to test 3D/AR on a real device).
+  allowedDevOrigins: ["192.168.1.4", "*.local"],
 };
 
 export default nextConfig;

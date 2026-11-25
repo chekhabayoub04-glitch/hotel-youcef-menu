@@ -120,3 +120,17 @@ body {
 :lang(ar) { font-family: var(--font-ar), system-ui, sans-serif; letter-spacing: 0 !important; }
 :lang(ar) * { letter-spacing: 0 !important; }
 :lang(ar) .font-serif { font-family: var(--font-ar-display), serif; }
+
+/* Visible keyboard focus everywhere (2px gold ring). */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* AR sheet: slides up on phones, scales in on tablets. */
+@keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes sheet-in { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
+.ar-sheet[open] { animation: sheet-up 0.38s cubic-bezier(0.22, 1, 0.36, 1); }
+.ar-sheet[open]::backdrop { animation: fade-up 0.3s ease-out; }
+@media (min-width: 640px) { .ar-sheet[open] { animation-name: sheet-in; animation-duration: 0.28s; } }
+@media (prefers-reduced-motion: reduce) { .ar-sheet[open], .ar-sheet[open]::backdrop { animation: none; } }

@@ -19,6 +19,10 @@ export type Dish = {
   image: string;
   available: boolean;
   featured: boolean;
+  /** GLB model (site path or URL) for the 3D / AR view. Null or empty = no 3D. */
+  model3dUrl?: string | null;
+  /** Pre-generated USDZ for iPhone/iPad Quick Look (instant AR). Optional: generated on the fly if missing. */
+  modelIosUrl?: string | null;
 };
 
 export type Menu = { categories: Category[]; dishes: Dish[] };

@@ -4,7 +4,12 @@ import type { Menu } from "./types";
  * The live site is served from the `gh-pages` branch. The admin edits files there directly through the
  * GitHub API; GitHub Pages republishes automatically (~1 minute). No server, no paid hosting.
  */
-export const REPO = { owner: "chekhabayoub04-glitch", name: "hotel-youcef-menu", branch: "gh-pages" };
+// NEXT_PUBLIC_GITHUB_REPO is set by scripts/deploy.mjs, so a preview deploy edits its own menu, not the client's.
+export const REPO = {
+  owner: "chekhabayoub04-glitch",
+  name: process.env.NEXT_PUBLIC_GITHUB_REPO || "hotel-youcef-menu",
+  branch: "gh-pages",
+};
 export const MENU_PATH = "menu.json";
 
 const API = `https://api.github.com/repos/${REPO.owner}/${REPO.name}`;

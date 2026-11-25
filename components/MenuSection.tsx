@@ -2,6 +2,7 @@
 import { useMemo, useRef, useState } from "react";
 import { categoryName, dishDesc, dishName } from "@/lib/i18n";
 import type { Category, Dish } from "@/lib/types";
+import { DishAR } from "./DishAR";
 import { DishImage } from "./DishImage";
 import { useLang } from "./LangProvider";
 import { Price } from "./Price";
@@ -87,6 +88,11 @@ function DishCard({ dish, category }: { dish: Dish; category?: Category }) {
     >
       <div className="relative size-24 shrink-0 overflow-hidden rounded-xl shadow-[0_0_24px_-10px_rgba(201,162,74,0.55)] ring-1 ring-gold/15 sm:size-28">
         <DishImage src={dish.image} alt={dishName(dish, lang)} className={`size-full transition duration-500 group-hover:scale-110 ${dish.available ? "" : "grayscale"}`} />
+        {dish.model3dUrl && (
+          <span className="absolute bottom-1.5 start-1.5 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-bold tracking-wider text-[#e2c47c] backdrop-blur">
+            {t.badge3d}
+          </span>
+        )}
       </div>
       <div className="flex min-w-0 flex-1 flex-col justify-center">
         <div className={`flex gap-3 ${sized ? "flex-col" : "items-baseline justify-between"}`}>
@@ -102,6 +108,11 @@ function DishCard({ dish, category }: { dish: Dish; category?: Category }) {
         {sized && (
           <div className="mt-3">
             <Price dish={dish} category={category} />
+          </div>
+        )}
+        {dish.model3dUrl && dish.available && (
+          <div className="mt-3">
+            <DishAR dish={dish} />
           </div>
         )}
       </div>
