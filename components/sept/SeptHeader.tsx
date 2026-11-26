@@ -19,7 +19,7 @@ export function SeptHeader() {
         </div>
         <a href="#top" className="inline-block bg-black">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={asset("logo.png")} alt="Hôtel Youcef" width={632} height={728} className="mx-auto h-40 w-auto sm:h-48" />
+          <img src={asset("logo-sm.webp")} alt="Hôtel Youcef" width={400} height={461} className="mx-auto h-40 w-auto sm:h-48" />
         </a>
         <nav aria-label="Navigation">
           <ul className="mt-6 flex flex-col items-center justify-center gap-4 font-playfair text-lg font-medium tracking-wide sm:flex-row sm:gap-12 sm:text-xl">
