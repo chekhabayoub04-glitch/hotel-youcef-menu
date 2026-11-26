@@ -14,7 +14,7 @@ const arabicDisplay = Amiri({ subsets: ["arabic"], weight: ["400", "700"], varia
 export const metadata: Metadata = {
   title: "Hôtel Youcef · Restaurant & Menu",
   description: "Le menu du restaurant de l'Hôtel Youcef, Khenchela — crêpes, pizzas, tacos, sandwichs, pâtisseries orientales, desserts et boissons.",
-  icons: { icon: `${BASE_PATH}/logo.png` },
+  icons: { icon: `${BASE_PATH}/icon.png`, apple: `${BASE_PATH}/icon.png` },
 };
 
 export const viewport: Viewport = {
