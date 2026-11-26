@@ -28,7 +28,7 @@ const CameraIcon = ({ className = "size-5" }: { className?: string }) => (
  * - Elsewhere (desktop), the button opens an interactive 3D viewer instead. No AR wording is shown.
  * - model-viewer is only downloaded once this card is near the viewport.
  */
-export function DishAR({ dish }: { dish: Dish }) {
+export function DishAR({ dish, viewerButton = true }: { dish: Dish; viewerButton?: boolean }) {
   const { lang, t } = useLang();
   const ref = useRef<HTMLDivElement>(null);
   const launcher = useRef<ModelViewerElement>(null);
@@ -57,6 +57,8 @@ export function DishAR({ dish }: { dish: Dish }) {
   }, [supported]);
 
   if (!src) return null;
+  // Card layouts that have their own "enlarge" control only need the AR button.
+  if (!viewerButton && !supported) return <div ref={ref} aria-hidden />;
 
   const onTap = () => {
     const v = launcher.current;
@@ -83,7 +85,7 @@ export function DishAR({ dish }: { dish: Dish }) {
         {supported ? <CameraIcon className="size-[18px]" /> : <CubeIcon className="size-[18px]" />}
         {supported ? t.arView : t.view3d}
       </button>
-      {supported && (
+      {supported && viewerButton && (
         <button
           type="button"
           onClick={() => setOpen(true)}
@@ -119,7 +121,7 @@ export function DishAR({ dish }: { dish: Dish }) {
   );
 }
 
-function DishARSheet({ dish, src, iosSrc, ar, onClose }: { dish: Dish; src: string; iosSrc?: string; ar: ARSupport; onClose: () => void }) {
+export function DishARSheet({ dish, src, iosSrc, ar, onClose }: { dish: Dish; src: string; iosSrc?: string; ar: ARSupport; onClose: () => void }) {
   const { lang, t } = useLang();
   const dialog = useRef<HTMLDialogElement>(null);
   const viewer = useRef<ModelViewerElement>(null);

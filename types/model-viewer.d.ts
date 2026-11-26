@@ -20,6 +20,8 @@ type ModelViewerProps = DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLEleme
   "touch-action"?: string;
   "interaction-prompt"?: "auto" | "none";
   "camera-orbit"?: string;
+  "field-of-view"?: string;
+  "rotation-per-second"?: string;
 };
 
 declare module "react" {

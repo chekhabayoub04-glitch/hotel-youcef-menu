@@ -13,6 +13,8 @@
   --gold: #c9a24a;
   --gold-soft: #e2c47c;
   --gold-ink: #0a0a0a;
+  --hairline: rgba(255, 255, 255, 0.12);
+  --thumb: #161616;
   --shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.8);
   color-scheme: dark;
 }
@@ -27,6 +29,8 @@
   --gold: #a57f2c;
   --gold-soft: #8a6a22;
   --gold-ink: #ffffff;
+  --hairline: rgba(26, 23, 18, 0.14);
+  --thumb: #efe8da;
   --shadow: 0 20px 45px -25px rgba(80, 60, 20, 0.35);
   color-scheme: light;
 }
@@ -36,6 +40,8 @@
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-line: var(--line);
+  --color-hairline: var(--hairline);
+  --color-thumb: var(--thumb);
   --color-text: var(--text);
   --color-muted: var(--muted);
   --color-gold: var(--gold);
@@ -44,6 +50,7 @@
   --font-serif: var(--font-display), "Cormorant Garamond", Georgia, serif;
   --font-sans: var(--font-body), system-ui, sans-serif;
   --font-arabic: var(--font-ar), var(--font-body), sans-serif;
+  --font-playfair: var(--font-playfair), "Playfair Display", Georgia, serif;
   --shadow-card: var(--shadow);
 }
 
@@ -119,7 +126,7 @@ body {
 /* Arabic: Tajawal for text, Amiri for display; no letter-spacing (it breaks letter joining). */
 :lang(ar) { font-family: var(--font-ar), system-ui, sans-serif; letter-spacing: 0 !important; }
 :lang(ar) * { letter-spacing: 0 !important; }
-:lang(ar) .font-serif { font-family: var(--font-ar-display), serif; }
+:lang(ar) .font-serif, :lang(ar) .font-playfair { font-family: var(--font-ar-display), serif; }
 
 /* Visible keyboard focus everywhere (2px gold ring). */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {

@@ -4,6 +4,7 @@
 //
 // Usage: npm run deploy                         → client site (remote "origin")
 //        DEPLOY_REMOTE=preview npm run deploy   → test site on another repository
+//        RESET_MENU=1 npm run deploy            → replace the live menu with public/menu.json (careful: discards admin edits)
 import { execFileSync } from "node:child_process";
 import { cpSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -21,13 +22,16 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? `/${repoName}`;
 const work = mkdtempSync(path.join(tmpdir(), "hy-pages-"));
 
 // 1. Check out the current gh-pages branch (or start a fresh one).
-const hasBranch = git(["ls-remote", "--heads", "origin", BRANCH]) !== "";
+const hasBranch = git(["ls-remote", "--heads", remote, BRANCH]) !== "";
 if (hasBranch) {
   git(["clone", "--quiet", "--depth", "1", "--branch", BRANCH, remote, work]);
   // 2. Pull the live menu back into the source so the build matches what the hotel edited.
   //    The live version wins; fields it doesn't have yet (e.g. new 3D model fields) come from the source.
+  //    RESET_MENU=1 skips this and publishes the source menu as the new live menu (e.g. a brand-new menu).
   const live = path.join(work, "menu.json");
-  if (existsSync(live)) {
+  if (process.env.RESET_MENU) {
+    console.log("⚠ RESET_MENU: the live menu will be replaced by public/menu.json");
+  } else if (existsSync(live)) {
     const localFile = path.join(root, "public", "menu.json");
     const liveMenu = JSON.parse(readFileSync(live, "utf8"));
     const localMenu = JSON.parse(readFileSync(localFile, "utf8"));

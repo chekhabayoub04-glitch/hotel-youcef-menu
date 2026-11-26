@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Amiri, Cormorant_Garamond, Manrope, Tajawal } from "next/font/google";
+import { Amiri, Cormorant_Garamond, Manrope, Playfair_Display, Tajawal } from "next/font/google";
 import { BASE_PATH } from "@/lib/asset";
 import { LANG_KEY } from "@/lib/i18n";
 import "./globals.css";
 
 const display = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-display" });
 const body = Manrope({ subsets: ["latin"], variable: "--font-body" });
+const playfair = Playfair_Display({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-playfair" });
 const arabic = Tajawal({ subsets: ["arabic"], weight: ["400", "500", "700"], variable: "--font-ar" });
 const arabicDisplay = Amiri({ subsets: ["arabic"], weight: ["400", "700"], variable: "--font-ar-display" });
 
@@ -32,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       dir="ltr"
       data-theme="dark"
       suppressHydrationWarning
-      className={`${display.variable} ${body.variable} ${arabic.variable} ${arabicDisplay.variable}`}
+      className={`${display.variable} ${body.variable} ${playfair.variable} ${arabic.variable} ${arabicDisplay.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />

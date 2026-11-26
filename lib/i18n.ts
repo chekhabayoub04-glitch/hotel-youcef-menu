@@ -49,6 +49,11 @@ export const dict = {
     realSize: "Taille réelle",
     modelAlt: "Modèle 3D :",
     credits: "Modèles 3D",
+    home: "Accueil",
+    contactRes: "Contact & Réservations",
+    menuIntro: "Découvrez nos créations gastronomiques, où chaque plat est une œuvre d'art",
+    seeAll: "Tout voir",
+    enlarge: "Agrandir",
   },
   ar: {
     nav: { popular: "الأكثر طلبًا", menu: "القائمة", gallery: "معرض الصور", contact: "اتصل بنا" },
@@ -95,6 +100,11 @@ export const dict = {
     realSize: "بالحجم الحقيقي",
     modelAlt: "مجسّم ثلاثي الأبعاد:",
     credits: "المجسّمات ثلاثية الأبعاد",
+    home: "الرئيسية",
+    contactRes: "اتصل واحجز",
+    menuIntro: "اكتشفوا إبداعاتنا، حيث كل طبق تحفة فنية",
+    seeAll: "عرض الكل",
+    enlarge: "تكبير",
   },
 } as const;
 
