@@ -37,6 +37,8 @@ export function DishAR({ dish, viewerButton = true }: { dish: Dish; viewerButton
   const [failed, setFailed] = useState(false);
   const src = dish.model3dUrl ? asset(dish.model3dUrl) : null;
   const iosSrc = dish.modelIosUrl ? asset(dish.modelIosUrl) : undefined;
+  // The native AR viewers get the plain (non-Draco) copy when there is one.
+  const arSrc = dish.modelArUrl ? asset(dish.modelArUrl) : src;
   const ar = useARSupport(near ? src : null);
   const supported = ar === "supported";
 
@@ -103,7 +105,7 @@ export function DishAR({ dish, viewerButton = true }: { dish: Dish; viewerButton
       {supported && (
         <model-viewer
           ref={launcher}
-          src={src}
+          src={arSrc ?? undefined}
           ios-src={iosSrc}
           alt={`${t.modelAlt} ${dishName(dish, lang)}`}
           ar
@@ -116,7 +118,7 @@ export function DishAR({ dish, viewerButton = true }: { dish: Dish; viewerButton
           style={{ display: "none" }}
         />
       )}
-      {open && <DishARSheet dish={dish} src={src} iosSrc={iosSrc} ar={ar} onClose={() => setOpen(false)} />}
+      {open && <DishARSheet dish={dish} src={arSrc ?? src} iosSrc={iosSrc} ar={ar} onClose={() => setOpen(false)} />}
     </div>
   );
 }

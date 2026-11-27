@@ -36,7 +36,7 @@ export function DishRow({ dish }: { dish: Dish }) {
           </div>
         )}
       </div>
-      {open && src && <DishARSheet dish={dish} src={src} iosSrc={dish.modelIosUrl ? asset(dish.modelIosUrl) : undefined} ar={ar} onClose={() => setOpen(false)} />}
+      {open && src && <DishARSheet dish={dish} src={dish.modelArUrl ? asset(dish.modelArUrl) : src} iosSrc={dish.modelIosUrl ? asset(dish.modelIosUrl) : undefined} ar={ar} onClose={() => setOpen(false)} />}
     </article>
   );
 }

@@ -23,6 +23,8 @@ export type Dish = {
   model3dUrl?: string | null;
   /** Pre-generated USDZ for iPhone/iPad Quick Look (instant AR). Optional: generated on the fly if missing. */
   modelIosUrl?: string | null;
+  /** Uncompressed GLB handed to Android Scene Viewer (it may not decode Draco). Falls back to model3dUrl. */
+  modelArUrl?: string | null;
 };
 
 export type Menu = { categories: Category[]; dishes: Dish[] };
